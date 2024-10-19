@@ -2,6 +2,10 @@
 SCREEN_WIDTH = 700
 SCREEN_HEIGHT = 700
 
+# Colors
+BORDER_COLOR = (100, 100, 100)  # gray
+TILE_COLOR = (118, 169, 227)  # light blue
+
 # Map
 MAP_WIDTH = 8
 MAP_HEIGHT = 8

@@ -1,5 +1,5 @@
 import pygame
-from constants import MAP_WIDTH, MAP_HEIGHT, MAP, TILE_WIDTH, TILE_HEIGHT
+from constants import MAP_WIDTH, MAP_HEIGHT, MAP, TILE_WIDTH, TILE_HEIGHT, BORDER_COLOR, TILE_COLOR
 
 
 class Map:
@@ -9,8 +9,7 @@ class Map:
     def draw_map(self, window):
         for row in range(MAP_WIDTH):
             for column in range(MAP_HEIGHT):
-                square = row * 8 + column
+                square = row * MAP_WIDTH + column
                 pygame.draw.rect(window,
-                                 (200, 200, 200) if MAP[square] == '#' else (
-                                     100, 100, 100),
+                                 BORDER_COLOR if MAP[square] == '#' else TILE_COLOR,
                                  (row * TILE_WIDTH, column * TILE_HEIGHT, TILE_WIDTH - 2, TILE_HEIGHT - 2))
