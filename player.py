@@ -1,6 +1,7 @@
 import pygame
 import math
 from constants import PlayerConstants
+from constants import MapConstants
 
 
 class Player:
@@ -10,41 +11,32 @@ class Player:
         self.radius = radius
         self.player_angle = math.pi
 
-    def handle_input(self):
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT] | keys[pygame.K_a]:
-            self.player_angle -= 0.1
-        if keys[pygame.K_RIGHT] | keys[pygame.K_d]:
-            self.player_angle += 0.1
+    def move(self, direction_multiplier):
+        new_x = self.position_x + \
+            (-math.sin(self.player_angle) * 5 * direction_multiplier)
+        new_y = self.position_y + \
+            (math.cos(self.player_angle) * 5 * direction_multiplier)
 
-    def ray_casting(self):
-        pass
+        col = int(new_x / MapConstants.TILE_WIDTH)
+        row = int(new_y / MapConstants.TILE_HEIGHT)
+        square = row * MapConstants.MAP_WIDTH + col
+
+        if MapConstants.MAP[square] != '#':
+            self.position_x = new_x
+            self.position_y = new_y
+
+    def move_forward(self):
+        self.move(1)
+
+    def move_backward(self):
+        self.move(-1)
+
+    def move_left(self):
+        self.player_angle -= 0.1
+
+    def move_right(self):
+        self.player_angle += 0.1
 
     def draw(self, window):
-        FOV = math.pi / 3
-        HALF_FOV = FOV / 2
-
-        # draw player (as a circle)
         pygame.draw.circle(window, PlayerConstants.PLAYER_COLOR, (
             self.position_x, self.position_y), self.radius)
-
-        # draw player direction
-        pygame.draw.line(window, (0, 255, 0),
-                         (self.position_x, self.position_y),
-                         (self.position_x - math.sin(self.player_angle) * 50,
-                          self.position_y + math.cos(self.player_angle) * 50),
-                         width=3)
-
-        # draw player FOV
-        # leftmost side
-        pygame.draw.line(window, (0, 255, 0),
-                         (self.position_x, self.position_y),
-                         (self.position_x - math.sin(self.player_angle - HALF_FOV) * 50,
-                          self.position_y + math.cos(self.player_angle - HALF_FOV) * 50),
-                         width=3)
-        # rightmost side
-        pygame.draw.line(window, (0, 255, 0),
-                         (self.position_x, self.position_y),
-                         (self.position_x - math.sin(self.player_angle + HALF_FOV) * 50,
-                          self.position_y + math.cos(self.player_angle + HALF_FOV) * 50),
-                         width=3)
