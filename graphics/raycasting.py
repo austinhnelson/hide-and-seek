@@ -1,6 +1,5 @@
-import pygame
 import math
-from constants import *
+from config import MAP, TILES
 
 
 class RayCasting:
@@ -16,13 +15,13 @@ class RayCasting:
                 target_x = position_x - math.sin(start_angle) * depth
                 target_y = position_y + math.cos(start_angle) * depth
 
-                col = int(target_x / MapConstants.TILE_WIDTH)
-                row = int(target_y / MapConstants.TILE_HEIGHT)
+                col = int(target_x / TILES["WIDTH"])
+                row = int(target_y / TILES["HEIGHT"])
 
-                if 0 <= col < MapConstants.MAP_WIDTH and 0 <= row < MapConstants.MAP_HEIGHT:
+                if 0 <= col < MAP["WIDTH"] and 0 <= row < MAP["HEIGHT"]:
                     visible_tiles.add((col, row))
-                    square = row * MapConstants.MAP_WIDTH + col
-                    if MapConstants.MAP[square] == '#':
+                    square = row * MAP["WIDTH"] + col
+                    if MAP["BOARD"][square] == '#':
                         break
 
             start_angle += step_angle

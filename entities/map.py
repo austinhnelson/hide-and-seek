@@ -1,16 +1,17 @@
 import pygame
+from config import MAP, TILES
 
 
 class Map:
-    def __init__(self, width, height, map, tile_width, tile_height, border_color, tile_color, background_color):
-        self.width = width
-        self.height = height
-        self.map = map
-        self.tile_width = tile_width
-        self.tile_height = tile_height
-        self.border_color = border_color
-        self.tile_color = tile_color
-        self.background_color = background_color
+    def __init__(self):
+        self.width = MAP["WIDTH"]
+        self.height = MAP["HEIGHT"]
+        self.map = MAP["BOARD"]
+        self.tile_width = TILES["WIDTH"]
+        self.tile_height = TILES["HEIGHT"]
+        self.border_color = MAP["BORDER_COLOR"]
+        self.tile_color = TILES["COLOR"]
+        self.background_color = MAP["BACKGROUND_COLOR"]
 
     def draw_border(self, window):
         for row in range(self.height):
@@ -30,16 +31,11 @@ class Map:
                                      1)
 
     def draw_tiles(self, window, tiles):
-        # Create a temporary surface with per-pixel alpha (RGBA)
         tile_surface = pygame.Surface(
             (self.tile_width, self.tile_height), pygame.SRCALPHA)
 
-        # Set the color with alpha (opacity) included
         for col, row in tiles:
-            # Fill the surface with the tile color including alpha
-            # tile_color should be (R, G, B, A)
             tile_surface.fill(self.tile_color)
 
-            # Blit the tile surface with transparency onto the main window
             window.blit(tile_surface, (col * self.tile_width,
                         row * self.tile_height))

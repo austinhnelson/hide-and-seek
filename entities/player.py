@@ -1,14 +1,13 @@
 import pygame
 import math
-from constants import PlayerConstants
-from constants import MapConstants
+from config import MAP, PLAYER, TILES
 
 
 class Player:
-    def __init__(self, position_x, position_y, radius):
-        self.position_x = position_x
-        self.position_y = position_y
-        self.radius = radius
+    def __init__(self):
+        self.position_x = PLAYER["INITIAL_X"]
+        self.position_y = PLAYER["INITIAL_Y"]
+        self.radius = PLAYER["RADIUS"]
         self.player_angle = math.pi
 
     def __move(self, direction_multiplier):
@@ -17,11 +16,11 @@ class Player:
         new_y = self.position_y + \
             (math.cos(self.player_angle) * 5 * direction_multiplier)
 
-        col = int(new_x / MapConstants.TILE_WIDTH)
-        row = int(new_y / MapConstants.TILE_HEIGHT)
-        square = row * MapConstants.MAP_WIDTH + col
+        col = int(new_x / TILES["WIDTH"])
+        row = int(new_y / TILES["HEIGHT"])
+        square = row * MAP["WIDTH"] + col
 
-        if MapConstants.MAP[square] != '#':
+        if MAP["BOARD"][square] != '#':
             self.position_x = new_x
             self.position_y = new_y
 
@@ -38,5 +37,5 @@ class Player:
         self.player_angle += 0.1
 
     def draw(self, window):
-        pygame.draw.circle(window, PlayerConstants.PLAYER_COLOR, (
+        pygame.draw.circle(window, PLAYER["COLOR"], (
             self.position_x, self.position_y), self.radius)
