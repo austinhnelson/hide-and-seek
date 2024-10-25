@@ -3,6 +3,17 @@ import pygame
 
 class InputManager:
     @staticmethod
+    def handle_menu_input(menu_screen):
+        keys = pygame.key.get_pressed()
+        isMenu = True
+
+        # handle position movement
+        if keys[pygame.K_RETURN]:
+            isMenu = False
+
+        return isMenu
+
+    @staticmethod
     def handle_player_input(player):
         keys = pygame.key.get_pressed()
 

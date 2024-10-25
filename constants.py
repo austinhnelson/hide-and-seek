@@ -20,9 +20,9 @@ class MapConstants:
     TILE_WIDTH = DisplayConstants.SCREEN_WIDTH // MAP_WIDTH
     TILE_HEIGHT = DisplayConstants.SCREEN_HEIGHT // MAP_HEIGHT
 
-    BORDER_COLOR = (100, 100, 100)  # gray
-    TILE_COLOR = (118, 169, 227)  # light blue
-    BACKGROUND_COLOR = (0, 0, 0)  # black
+    BORDER_COLOR = (100, 100, 100, 255)  # gray, fully opaque
+    TILE_COLOR = (118, 169, 227, 128)  # light blue with 50% opacity
+    BACKGROUND_COLOR = (0, 0, 0, 255)  # black, fully opaque
 
 
 class PlayerConstants:

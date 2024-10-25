@@ -11,7 +11,7 @@ class Player:
         self.radius = radius
         self.player_angle = math.pi
 
-    def move(self, direction_multiplier):
+    def __move(self, direction_multiplier):
         new_x = self.position_x + \
             (-math.sin(self.player_angle) * 5 * direction_multiplier)
         new_y = self.position_y + \
@@ -26,10 +26,10 @@ class Player:
             self.position_y = new_y
 
     def move_forward(self):
-        self.move(1)
+        self.__move(1)
 
     def move_backward(self):
-        self.move(-1)
+        self.__move(-1)
 
     def move_left(self):
         self.player_angle -= 0.1
