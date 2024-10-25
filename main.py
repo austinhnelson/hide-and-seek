@@ -42,12 +42,14 @@ async def main():
     isMenuScreen = True
     wait_task = asyncio.create_task(server.wait_for_players())
 
+    running = True
+
     try:
-        while True:
+        while running:
             events = pygame.event.get()
             for event in events:
                 if event.type == pygame.QUIT:
-                    break  # Break out of the loop to cleanly exit
+                    running = False
 
             if isMenuScreen:
                 if len(server.connections) == 2:
@@ -73,9 +75,13 @@ async def main():
             clock.tick(30)
             await asyncio.sleep(0)
     finally:
-        wait_task.cancel()  # Cancel the wait task
-        await wait_task  # Wait for the task to finish if needed
-        pygame.quit()
-        sys.exit(0)
+        wait_task.cancel()
+        try:
+            await wait_task
+        except asyncio.CancelledError:
+            print("Wait task cancelled")
+
+    pygame.quit()
+    sys.exit(0)
 
 asyncio.run(main())
