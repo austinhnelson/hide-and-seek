@@ -62,7 +62,7 @@ class Game:
         if self.is_menu:
             self.menu.draw(self.window)
         else:
-            # TODO: This is not good. Looks pretty bad.
+            # TODO: This is not good. Looks pretty bad visually.
             visible_tiles = RayCasting.get_visible_tiles(
                 self.player.player_angle,
                 math.pi / 3,

@@ -9,6 +9,7 @@ class Menu:
         self.text_color = (255, 0, 0)
         self.server = server
 
+    # TODO: Thing is hideous, need to update this.
     def draw(self, window):
         player_addresses = self.server.connections
 
