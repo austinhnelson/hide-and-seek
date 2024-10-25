@@ -3,27 +3,24 @@ import pygame
 
 class InputManager:
     @staticmethod
-    def handle_menu_input():
+    def is_enter_selected():
         keys = pygame.key.get_pressed()
-        isMenu = True
+        is_enter_key = False
 
-        # handle position movement
         if keys[pygame.K_RETURN]:
-            isMenu = False
+            is_enter_key = True
 
-        return isMenu
+        return is_enter_key
 
     @staticmethod
     def handle_player_input(player):
         keys = pygame.key.get_pressed()
 
-        # handle angle movement
         if keys[pygame.K_LEFT] | keys[pygame.K_a]:
-            player.move_left()
+            player.look_left()
         elif keys[pygame.K_RIGHT] | keys[pygame.K_d]:
-            player.move_right()
+            player.look_right()
 
-        # handle position movement
         if keys[pygame.K_UP] | keys[pygame.K_w]:
             player.move_forward()
         elif keys[pygame.K_DOWN] | keys[pygame.K_s]:

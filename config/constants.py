@@ -18,14 +18,14 @@ MAP = {
         '#     ##'
         '########'
     ),
-    "BORDER_COLOR": (100, 100, 100, 255),
-    "BACKGROUND_COLOR": (0, 0, 0, 255),
+    "BORDER_COLOR": (100, 100, 100),
+    "BACKGROUND_COLOR": (0, 0, 0),
 }
 
-TILES = {
+TILE = {
     "WIDTH": DISPLAY["WIDTH"] // MAP["WIDTH"],
     "HEIGHT": DISPLAY["HEIGHT"] // MAP["HEIGHT"],
-    "COLOR": (118, 169, 227, 128),
+    "COLOR": (118, 169, 227),
 }
 
 PLAYER = {
@@ -37,5 +37,5 @@ PLAYER = {
 
 NETWORK = {
     "SERVER_PORT": 5003,
-    "NUM_OF_ALLOWED_CONNECTIONS": 2,
+    "NUM_OF_ALLOWED_CONNECTIONS": 0,
 }

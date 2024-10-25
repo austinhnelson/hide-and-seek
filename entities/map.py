@@ -1,5 +1,5 @@
 import pygame
-from config import MAP, TILES
+from config import MAP, TILE
 
 
 class Map:
@@ -7,10 +7,10 @@ class Map:
         self.width = MAP["WIDTH"]
         self.height = MAP["HEIGHT"]
         self.map = MAP["BOARD"]
-        self.tile_width = TILES["WIDTH"]
-        self.tile_height = TILES["HEIGHT"]
+        self.tile_width = TILE["WIDTH"]
+        self.tile_height = TILE["HEIGHT"]
         self.border_color = MAP["BORDER_COLOR"]
-        self.tile_color = TILES["COLOR"]
+        self.tile_color = TILE["COLOR"]
         self.background_color = MAP["BACKGROUND_COLOR"]
 
     def draw_border(self, window):
@@ -30,12 +30,8 @@ class Map:
                                       self.tile_height, self.tile_width, self.tile_height),
                                      1)
 
-    def draw_tiles(self, window, tiles):
-        tile_surface = pygame.Surface(
-            (self.tile_width, self.tile_height), pygame.SRCALPHA)
-
+    def draw_visible_tiles(self, window, tiles):
         for col, row in tiles:
-            tile_surface.fill(self.tile_color)
-
-            window.blit(tile_surface, (col * self.tile_width,
-                        row * self.tile_height))
+            pygame.draw.rect(window, self.tile_color,
+                             (col * self.tile_width, row * self.tile_height,
+                              self.tile_width, self.tile_height))

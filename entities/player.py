@@ -1,6 +1,6 @@
 import pygame
 import math
-from config import MAP, PLAYER, TILES
+from config import MAP, PLAYER, TILE
 
 
 class Player:
@@ -16,8 +16,8 @@ class Player:
         new_y = self.position_y + \
             (math.cos(self.player_angle) * 5 * direction_multiplier)
 
-        col = int(new_x / TILES["WIDTH"])
-        row = int(new_y / TILES["HEIGHT"])
+        col = int(new_x / TILE["WIDTH"])
+        row = int(new_y / TILE["HEIGHT"])
         square = row * MAP["WIDTH"] + col
 
         if MAP["BOARD"][square] != '#':
@@ -30,10 +30,10 @@ class Player:
     def move_backward(self):
         self.__move(-1)
 
-    def move_left(self):
+    def look_left(self):
         self.player_angle -= 0.1
 
-    def move_right(self):
+    def look_right(self):
         self.player_angle += 0.1
 
     def draw(self, window):

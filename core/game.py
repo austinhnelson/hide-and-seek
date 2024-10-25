@@ -2,7 +2,8 @@ import asyncio
 import math
 import sys
 import pygame
-from config import DISPLAY, MAP, TILES
+
+from config import DISPLAY, MAP, TILE, NETWORK
 from core.input_manager import InputManager
 from network import Server
 from graphics import RayCasting
@@ -40,20 +41,19 @@ class Game:
 
                 self.loop.call_soon(self.loop.stop)
                 self.loop.run_forever()
-        except Exception as e:
-            print(f"An error occurred during the game loop: {e}")
-            self.running = False  # Exit the loop on error
         finally:
             self.shutdown()
 
+    # TODO: Is there a cleaner way to handle events?
+    # Specifically, events differing from menu screen vs game?
     def handle_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
 
         if self.is_menu:
-            if len(self.server.connections) == 2:
-                self.is_menu = InputManager.handle_menu_input()
+            if len(self.server.connections) == NETWORK["NUM_OF_ALLOWED_CONNECTIONS"]:
+                self.is_menu = not InputManager.is_enter_selected()
         else:
             InputManager.handle_player_input(self.player)
 
@@ -62,16 +62,17 @@ class Game:
         if self.is_menu:
             self.menu.draw(self.window)
         else:
+            # TODO: This is not good. Looks pretty bad.
             visible_tiles = RayCasting.get_visible_tiles(
                 self.player.player_angle,
                 math.pi / 3,
                 120,
-                int(MAP["WIDTH"] * TILES["WIDTH"]),
+                int(MAP["WIDTH"] * TILE["WIDTH"]),
                 self.player.position_x,
                 self.player.position_y
             )
             self.player.draw(self.window)
-            self.map.draw_tiles(self.window, visible_tiles)
+            self.map.draw_visible_tiles(self.window, visible_tiles)
             self.map.draw_border(self.window)
 
         pygame.display.flip()
