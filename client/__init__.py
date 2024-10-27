@@ -1,3 +1,3 @@
-from .main import GameClient
+from .main import Game
 
-__all__ = ['GameClient']
+__all__ = ['Game']
