@@ -1,4 +1,0 @@
-NETWORK = {
-    "SERVER_PORT": 5003,
-    "ALLOWED_CONNECTIONS": 2,
-}

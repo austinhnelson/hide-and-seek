@@ -1,5 +1,5 @@
-from network import GameServer
 import asyncio
+from network import GameServer
 
 
 async def main():

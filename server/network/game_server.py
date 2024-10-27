@@ -1,16 +1,20 @@
-from shared.constants import NETWORK
 import socket
 import asyncio
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 
 class GameServer:
     def __init__(self):
         self.host = socket.gethostname()
-        self.port = NETWORK["SERVER_PORT"]
+        self.port = int(os.getenv("SERVER_PORT"))
         self.player_connections = []
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_socket.bind((self.host, self.port))
-        self.server_socket.listen(NETWORK["ALLOWED_CONNECTIONS"])
+        self.server_socket.listen(int(os.getenv("ALLOWED_CONNECTIONS")))
+        print(f"Server successfully started on {self.port}")
 
     async def listen_for_connections(self):
         while True:
