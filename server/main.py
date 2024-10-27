@@ -1,11 +1,10 @@
 import asyncio
-from core import Game
+from network import GameServer
 
 
 async def main():
-    game = Game()
-    game.run()
-
+    server = GameServer()
+    await server.run()
 
 if __name__ == "__main__":
     asyncio.run(main())
