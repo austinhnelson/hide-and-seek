@@ -1,6 +1,6 @@
+import sys
 import pygame
 import asyncio
-import sys
 from config import DISPLAY
 from network import GameClient
 
@@ -18,32 +18,29 @@ class Game:
 
         self.running = True
 
-        self.loop = asyncio.new_event_loop()
-        self.connect_players = self.loop.create_task(self.client.connect())
+    async def run(self):
+        connect_task = asyncio.create_task(self.client.connect())
 
-    def run(self):
-        try:
-            while self.running:
-                self.render()
-                self.clock.tick(DISPLAY["FPS"])
+        while self.running:
+            self.handle_events()
+            self.render()
+            self.clock.tick(DISPLAY["FPS"])
 
-                # TODO: Is this the best approach?
-                self.loop.call_soon(self.loop.stop)
-                self.loop.run_forever()
-        finally:
-            self.shutdown()
+            await asyncio.sleep(0)
+
+        await connect_task
+        await self.shutdown()
+
+    def handle_events(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.running = False
 
     def render(self):
         self.window.fill((0, 0, 0))
         pygame.display.flip()
 
-    def shutdown(self):
-        self.connect_players.cancel()
-        try:
-            self.loop.run_until_complete(self.connect_players)
-        except asyncio.CancelledError:
-            print("Program closing...")
-
-        self.loop.close()
+    async def shutdown(self):
+        await self.client.disconnect()
         pygame.quit()
         sys.exit(0)

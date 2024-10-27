@@ -4,7 +4,7 @@ from core import Game
 
 async def main():
     game = Game()
-    game.run()
+    await game.run()
 
 
 if __name__ == "__main__":
