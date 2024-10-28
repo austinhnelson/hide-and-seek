@@ -3,6 +3,7 @@ import pygame
 import asyncio
 from config import DISPLAY
 from network import GameClient
+from ui import Menu
 
 
 class GameState:
@@ -20,6 +21,7 @@ class Game:
         self.clock = pygame.time.Clock()
 
         self.client = GameClient()
+        self.menu = Menu(self.client)
 
         self.running = True
         self.state = GameState.MENU
@@ -29,6 +31,7 @@ class Game:
 
         while self.running:
             self.handle_events()
+            await self.client.process_server_messages()
             self.render()
             self.clock.tick(DISPLAY["FPS"])
             await asyncio.sleep(0)
@@ -48,7 +51,7 @@ class Game:
         self.window.fill((0, 0, 0))
 
         if self.state == GameState.MENU:
-            self.window.fill((0, 0, 0))
+            self.menu.draw(self.window)
         elif self.state == GameState.PLAYING:
             self.window.fill((255, 255, 255))
 
