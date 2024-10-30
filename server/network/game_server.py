@@ -34,6 +34,16 @@ class GameServer:
 
         await self.broadcast_player_count()
 
+        try:
+            while True:
+                data = await asyncio.to_thread(conn.recv, 1024)
+                if not data:
+                    break
+        except (ConnectionResetError, BrokenPipeError):
+            print(f"Player {addr} unexpectedly disconnected.")
+        finally:
+            await self.disconnect_client(conn, addr)
+
     async def broadcast_player_count(self):
         message = {
             "type": "player_count",
@@ -54,9 +64,13 @@ class GameServer:
             conn, addr = await asyncio.to_thread(self.server_socket.accept)
             asyncio.create_task(self.handle_client(conn, addr))
 
-    def disconnect_client(self, conn, addr):
-        print(f"Player {addr} disconnected.")
-        self.player_connections.remove(conn)
+    async def disconnect_client(self, conn, addr):
+        if addr in self.player_connections:
+            player_id = self.player_connections[addr]["player_id"]
+            print(f"Player {player_id} from {addr} disconnected.")
+            del self.player_connections[addr]
+            await self.broadcast_player_count()
+        conn.close()
 
     async def run(self):
         await self.listen_for_connections()
