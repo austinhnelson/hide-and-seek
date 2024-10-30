@@ -32,7 +32,7 @@ class GameServer:
         }
         await asyncio.to_thread(conn.send, json.dumps(welcome_message).encode())
 
-        await asyncio.sleep(0.1)
+        await asyncio.sleep(0.05)
         await self.broadcast_player_count()
 
         try:
