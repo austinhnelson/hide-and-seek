@@ -29,7 +29,7 @@ class GameClient:
     async def receive_messages(self):
         while True:
             try:
-                data = await asyncio.to_thread(self.client_socket.recv, 1024)
+                data = await asyncio.to_thread(self.client_socket.recv, 4096)
                 if not data:
                     break
 
