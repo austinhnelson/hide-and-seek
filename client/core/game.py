@@ -4,11 +4,7 @@ import asyncio
 from config import DISPLAY
 from network import GameClient
 from ui import Menu
-
-
-class GameState:
-    MENU = "menu",
-    PLAYING = "playing"
+from .game_state import GameState
 
 
 class Game:
@@ -22,9 +18,9 @@ class Game:
 
         self.client = GameClient()
         self.menu = Menu(self.client)
+        self.game_state = GameState(self.menu)
 
         self.running = True
-        self.state = GameState.MENU
 
     async def run(self):
         connect_task = asyncio.create_task(self.client.connect())
@@ -43,18 +39,12 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE and self.state == GameState.MENU:
-                    self.state = GameState.PLAYING
+            else:
+                self.game_state.handle_input(event)
 
     def render(self):
         self.window.fill((0, 0, 0))
-
-        if self.state == GameState.MENU:
-            self.menu.draw(self.window)
-        elif self.state == GameState.PLAYING:
-            self.window.fill((255, 255, 255))
-
+        self.game_state.render(self.window)
         pygame.display.flip()
 
     async def shutdown(self):
