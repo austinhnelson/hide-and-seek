@@ -3,7 +3,8 @@ from .states import MenuState
 
 class GameState:
     def __init__(self, menu):
-        self.state = MenuState(menu)
+        self.state = MenuState(menu, self)
+        self.running = True
 
     def set_state(self, new_state):
         self.state = new_state

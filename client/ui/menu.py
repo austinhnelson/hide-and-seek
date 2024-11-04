@@ -48,3 +48,6 @@ class Menu:
                 button["text"], True, (65, 209, 84) if button["selected"] else (0, 0, 0))
             text_rect = text_surface.get_rect(center=button["position"])
             window.blit(text_surface, text_rect)
+
+    def draw_lobby(self, window):
+        window.fill((0, 0, 0))

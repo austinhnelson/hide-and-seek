@@ -1,7 +1,7 @@
 from .base import StateBase
 
 
-class MenuState(StateBase):
+class LobbyState(StateBase):
     def __init__(self, menu):
         self.menu = menu
 

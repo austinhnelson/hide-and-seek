@@ -20,12 +20,10 @@ class Game:
         self.menu = Menu(self.client)
         self.game_state = GameState(self.menu)
 
-        self.running = True
-
     async def run(self):
         connect_task = asyncio.create_task(self.client.connect())
 
-        while self.running:
+        while self.game_state.running:
             self.handle_events()
             await self.client.process_server_messages()
             self.render()
@@ -38,7 +36,7 @@ class Game:
     def handle_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                self.running = False
+                self.game_state.running = False
             else:
                 self.game_state.handle_input(event)
 
