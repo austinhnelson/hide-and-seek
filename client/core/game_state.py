@@ -2,8 +2,8 @@ from .states import MenuState
 
 
 class GameState:
-    def __init__(self, menu):
-        self.state = MenuState(menu, self)
+    def __init__(self):
+        self.state = MenuState(self)
         self.running = True
 
     def set_state(self, new_state):

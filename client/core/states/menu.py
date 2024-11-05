@@ -1,11 +1,12 @@
 from .base import StateBase
-from .lobby import LobbyState
+from .how_to_play import HowToPlayState
+from ui import Menu
 import pygame
 
 
 class MenuState(StateBase):
-    def __init__(self, menu, game_state):
-        self.menu = menu
+    def __init__(self, game_state):
+        self.menu = Menu()
         self.game_state = game_state
 
     def handle_input(self, event):
@@ -21,11 +22,11 @@ class MenuState(StateBase):
         for button in self.menu.buttons:
             if button["selected"]:
                 if button["text"] == "Join Lobby":
-                    print("this would transition the game into lobby")
+                    print("This would join the lobby")
                 elif button["text"] == "How to Play":
-                    print("this would transition the game into how to play")
+                    self.game_state.set_state(HowToPlayState(self.game_state))
                 elif button["text"] == "Exit":
                     self.game_state.running = False
 
     def render(self, window):
-        self.menu.draw_menu(window)
+        self.menu.draw(window)

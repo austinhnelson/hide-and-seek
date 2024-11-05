@@ -16,21 +16,19 @@ class Game:
         pygame.display.set_caption(DISPLAY["CAPTION"])
         self.clock = pygame.time.Clock()
 
-        self.client = GameClient()
-        self.menu = Menu(self.client)
-        self.game_state = GameState(self.menu)
+        self.game_state = GameState()
 
     async def run(self):
-        connect_task = asyncio.create_task(self.client.connect())
+        # connect_task = asyncio.create_task(self.client.connect())
 
         while self.game_state.running:
             self.handle_events()
-            await self.client.process_server_messages()
+            # await self.client.process_server_messages()
             self.render()
             self.clock.tick(DISPLAY["FPS"])
             await asyncio.sleep(0)
 
-        await connect_task
+        # await connect_task
         await self.shutdown()
 
     def handle_events(self):
@@ -46,6 +44,6 @@ class Game:
         pygame.display.flip()
 
     async def shutdown(self):
-        await self.client.disconnect()
+        # await self.client.disconnect()
         pygame.quit()
         sys.exit(0)
