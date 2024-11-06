@@ -1,4 +1,5 @@
 import pygame
+from config import DISPLAY
 
 
 class Lobby:
@@ -8,5 +9,10 @@ class Lobby:
         self.font = pygame.font.Font(
             "client/assets/fonts/PlayMeGames-Demo.otf", 20)
 
+        self.image = pygame.image.load(
+            "client/assets/lobby_bg.png").convert_alpha()
+
     def draw(self, window):
-        window.fill((0, 255, 0))
+        image_rect = pygame.Rect(
+            550, 50, DISPLAY["WIDTH"], DISPLAY["HEIGHT"])
+        window.blit(self.image, (0, 0), image_rect)
