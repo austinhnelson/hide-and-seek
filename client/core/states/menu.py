@@ -1,5 +1,6 @@
 from .base import StateBase
 from .how_to_play import HowToPlayState
+from .lobby import LobbyState
 from ui import Menu
 import pygame
 
@@ -22,7 +23,7 @@ class MenuState(StateBase):
         for button in self.menu.buttons:
             if button["selected"]:
                 if button["text"] == "Join Lobby":
-                    print("This would join the lobby")
+                    self.game_state.set_state(LobbyState(self.game_state))
                 elif button["text"] == "How to Play":
                     self.game_state.set_state(HowToPlayState(self.game_state))
                 elif button["text"] == "Exit":
