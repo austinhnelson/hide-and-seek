@@ -10,7 +10,10 @@ class LobbyState(StateBase):
         self.ready = False
 
     def handle_input(self, event):
-        pass
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_RETURN:
+                from .menu import MenuState
+                self.game_state.set_state(MenuState(self.game_state))
 
     def render(self, window):
-        self.menu.draw(window)
+        self.menu.draw(window, self.game_state.player_list)

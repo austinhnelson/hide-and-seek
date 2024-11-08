@@ -21,7 +21,7 @@ class GameClient:
         try:
             self.client_socket.connect((self.host, self.port))
             self.client_socket.setblocking(False)
-            # print("Connected to game server.")
+            print("Connected to game server.")
             asyncio.create_task(self.receive_messages())
         except Exception as e:
             print(f"Connection error: {e}")
@@ -42,7 +42,7 @@ class GameClient:
             except BlockingIOError:
                 await asyncio.sleep(0.1)
             except Exception as e:
-                # print(f"Error receiving message: {e}")
+                print(f"Error receiving message: {e}")
                 break
 
     async def get_next_message(self):
@@ -64,4 +64,4 @@ class GameClient:
 
     async def disconnect(self):
         self.client_socket.close()
-        # print("Disconnected from game server.")
+        print("Disconnected from game server.")
