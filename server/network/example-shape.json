@@ -1,0 +1,7 @@
+{
+    "player_count": 2,
+    "players": [
+        {"id": 1, "name": "Player1" },
+        {"id": 2, "name": "Player2" }
+    ]
+}

@@ -1,6 +1,6 @@
 import json
+import threading
 import socket
-import asyncio
 from dotenv import load_dotenv
 import os
 
@@ -11,67 +11,47 @@ class GameServer:
     def __init__(self):
         self.host = socket.gethostname()
         self.port = int(os.getenv("SERVER_PORT"))
-        self.player_connections = {}
-        self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server_socket.bind((self.host, self.port))
-        self.server_socket.listen(int(os.getenv("ALLOWED_CONNECTIONS")))
-        print(f"Server successfully started on {self.port}")
+        self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server.bind((self.host, self.port))
+        self.server.listen(int(os.getenv("ALLOWED_CONNECTIONS")))
+        # print(f"Server successfully started on {self.port}")
 
-    async def handle_client(self, conn, addr):
-        player_id = len(self.player_connections) + 1
-        self.player_connections[addr] = {
-            "connection": conn,
-            "player_id": player_id
+        self.running_total = 1
+        self.clients = []
+        self.player_data = {
+            "player_count": 0,
+            "players": []
         }
-        print(f"Player {player_id} connected from {addr}")
 
-        welcome_message = {
-            "type": "welcome",
-            "player_id": player_id,
-            "total_players": len(self.player_connections)
-        }
-        await asyncio.to_thread(conn.send, json.dumps(welcome_message).encode())
-
-        await asyncio.sleep(0.05)
-        await self.broadcast_player_count()
-
-        try:
-            while True:
-                data = await asyncio.to_thread(conn.recv, 1024)
-                if not data:
-                    break
-        except (ConnectionResetError, BrokenPipeError):
-            print(f"Player {addr} unexpectedly disconnected.")
-        finally:
-            await self.disconnect_client(conn, addr)
-
-    async def broadcast_player_count(self):
-        message = {
-            "type": "player_count",
-            "total_players": len(self.player_connections),
-            "players": [
-                {"id": info["player_id"], "address": str(addr)}
-                for addr, info in self.player_connections.items()
-            ]
-        }
-        for info in self.player_connections.values():
-            try:
-                await asyncio.to_thread(info["connection"].send, json.dumps(message).encode())
-            except:
-                continue
-
-    async def listen_for_connections(self):
+    def run(self):
         while True:
-            conn, addr = await asyncio.to_thread(self.server_socket.accept)
-            asyncio.create_task(self.handle_client(conn, addr))
+            client_socket, addr = self.server.accept()
+            # print(f"New connection from {addr}")
+            self.clients.append(client_socket)
+            self.player_data["player_count"] += 1
+            self.player_data["players"].append(
+                {
+                    "id": self.player_data["player_count"],
+                    "name": f"Player {self.player_data['player_count']}"
+                })
+            threading.Thread(target=self.__handle_client,
+                             args=(client_socket,)).start()
 
-    async def disconnect_client(self, conn, addr):
-        if addr in self.player_connections:
-            player_id = self.player_connections[addr]["player_id"]
-            print(f"Player {player_id} from {addr} disconnected.")
-            del self.player_connections[addr]
-            await self.broadcast_player_count()
-        conn.close()
+    def __handle_client(self, client_socket):
+        while True:
+            try:
+                msg = client_socket.recv(1024).decode('utf-8')
+                if msg:
+                    for other_client in self.clients:
+                        if other_client != client_socket:
+                            other_client.send(json.dumps(
+                                self.player_data).encode('utf-8'))
+                else:
+                    break
+            except:
+                break
 
-    async def run(self):
-        await self.listen_for_connections()
+        # print(f"Client {client_socket} disconnected")
+        self.clients.remove(client_socket)
+        self.player_data["player_count"] -= 1
+        client_socket.close()
