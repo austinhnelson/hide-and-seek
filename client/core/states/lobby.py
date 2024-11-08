@@ -1,11 +1,13 @@
 from .base import StateBase
 from ui import Lobby
 import pygame
+from network import GameClient
 
 
 class LobbyState(StateBase):
     def __init__(self, game_state):
         self.menu = Lobby()
+        self.client = GameClient()
         self.game_state = game_state
         self.ready = False
 
@@ -16,4 +18,4 @@ class LobbyState(StateBase):
                 self.game_state.set_state(MenuState(self.game_state))
 
     def render(self, window):
-        self.menu.draw(window, self.game_state.player_list)
+        self.menu.draw(window, [])

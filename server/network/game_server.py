@@ -26,7 +26,7 @@ class GameServer:
     def run(self):
         while True:
             client_socket, addr = self.server.accept()
-            # print(f"New connection from {addr}")
+            print(f"New connection from {addr}")
             self.clients.append(client_socket)
             self.player_data["player_count"] += 1
             self.player_data["players"].append(
@@ -51,7 +51,7 @@ class GameServer:
             except:
                 break
 
-        # print(f"Client {client_socket} disconnected")
+        print(f"Client {client_socket} disconnected")
         self.clients.remove(client_socket)
         self.player_data["player_count"] -= 1
         client_socket.close()

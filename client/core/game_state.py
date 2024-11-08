@@ -1,17 +1,14 @@
 import sys
 import pygame
 from .states import MenuState
-from network import GameClient
 
 
 class GameState:
     def __init__(self):
         self.state = MenuState(self)
-        self.client = GameClient()
         self.running = True
 
     def run(self, window):
-        self.player_list = self.client.player_list
         self.__handle_events()
         self.__render(window)
 
