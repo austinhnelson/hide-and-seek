@@ -1,8 +1,5 @@
-import sys
 import pygame
-import asyncio
 from config import DISPLAY
-from network import GameClient
 from .game_state import GameState
 
 
@@ -19,14 +16,8 @@ class Game:
 
     async def run(self):
         while self.game_state.running:
-            self.game_state.run()
-            self.game_state.render(self.window)
+            self.game_state.run(self.window)
 
             self.clock.tick(DISPLAY["FPS"])
 
-        await self.shutdown()
-
-    async def shutdown(self):
         await self.game_state.shutdown()
-        pygame.quit()
-        sys.exit(0)
