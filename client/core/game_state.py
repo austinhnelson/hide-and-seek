@@ -1,10 +1,12 @@
 import sys
 import pygame
 from .states import MenuState
+from network import GameClient
 
 
 class GameState:
     def __init__(self):
+        self.client = None
         self.state = MenuState(self)
         self.running = True
 
@@ -13,13 +15,21 @@ class GameState:
         self.__render(window)
 
     async def shutdown(self):
-        await self.client.disconnect()
-
+        if self.client:
+            self.client.close()
         pygame.quit()
         sys.exit(0)
 
     def set_state(self, new_state):
+        if self.state.__class__.__name__ == "LobbyState" and self.client:
+            self.client.close()
+            self.client = None
+
         self.state = new_state
+
+    def initializeClient(self):
+        if not self.client:
+            self.client = GameClient()
 
     def __handle_events(self):
         for event in pygame.event.get():
@@ -30,7 +40,5 @@ class GameState:
 
     def __render(self, window):
         window.fill((0, 0, 0))
-
         self.state.render(window)
-
         pygame.display.flip()

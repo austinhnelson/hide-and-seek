@@ -23,7 +23,9 @@ class MenuState(StateBase):
         for button in self.menu.buttons:
             if button["selected"]:
                 if button["text"] == "Join Lobby":
-                    self.game_state.set_state(LobbyState(self.game_state))
+                    self.game_state.initializeClient()
+                    self.game_state.set_state(
+                        LobbyState(self.game_state, self.game_state.client))
                 elif button["text"] == "How to Play":
                     self.game_state.set_state(HowToPlayState(self.game_state))
                 elif button["text"] == "Exit":

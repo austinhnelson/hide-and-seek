@@ -51,7 +51,13 @@ class GameServer:
             except:
                 break
 
-        print(f"Client {client_socket} disconnected")
+        # print(f"Client {client_socket} disconnected")
         self.clients.remove(client_socket)
         self.player_data["player_count"] -= 1
+        # self.player_data["players"].remove(
+        #     {
+        #         "id": self.player_data["player_count"],
+        #         "name": f"Player {self.player_data['player_count']}"
+        #     }
+        # )
         client_socket.close()
