@@ -16,6 +16,7 @@ class GameClient:
 
         self.player_data = None
 
+        # Start a thread to listen for data from the server
         threading.Thread(target=self.receive_data).start()
 
     def receive_data(self):
@@ -23,7 +24,9 @@ class GameClient:
             while True:
                 msg = self.server.recv(1024).decode('utf-8')
                 if msg:
-                    self.player_data = json.load(msg)
+                    self.player_data = json.loads(msg)
+
+                    print(self.player_data)
                 else:
                     print("Server closed connection.")
                     break
