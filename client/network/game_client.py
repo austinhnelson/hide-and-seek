@@ -14,7 +14,10 @@ class GameClient:
         self.port = int(os.getenv("SERVER_PORT"))
         self.server.connect((self.host, self.port))
 
-        self.player_data = None
+        self.player_data = {
+            "player_count": 0,
+            "players": []
+        }
 
         # Start a thread to listen for data from the server
         threading.Thread(target=self.receive_data).start()

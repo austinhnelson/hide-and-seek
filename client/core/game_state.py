@@ -1,7 +1,9 @@
 import sys
 import pygame
+
 from .states import MenuState
 from network import GameClient
+from .states import LobbyState
 
 
 class GameState:
@@ -21,10 +23,9 @@ class GameState:
         sys.exit(0)
 
     def set_state(self, new_state):
-        if self.state.__class__.__name__ == "LobbyState" and self.client:
+        if isinstance(self.state, LobbyState) and self.client:
             self.client.close()
             self.client = None
-
         self.state = new_state
 
     def initializeClient(self):

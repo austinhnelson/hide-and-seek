@@ -26,8 +26,9 @@ class Lobby:
         ]
 
     def draw(self, window, player_names):
-        image_rect = pygame.Rect(
-            550, 50, DISPLAY["WIDTH"], DISPLAY["HEIGHT"])
+
+        # Draw the background image and text box as you already do
+        image_rect = pygame.Rect(550, 50, DISPLAY["WIDTH"], DISPLAY["HEIGHT"])
         window.blit(self.image, (0, 0), image_rect)
 
         box_rect = pygame.Rect(
@@ -37,20 +38,20 @@ class Lobby:
             self.text_box_height
         )
         pygame.draw.rect(window, (255, 255, 255), box_rect, border_radius=10)
-        pygame.draw.rect(window, (0, 0, 0), box_rect, 2,
-                         border_radius=10)
+        pygame.draw.rect(window, (0, 0, 0), box_rect, 2, border_radius=10)
 
-        self.draw_player_names(window, player_names)
+        # Draw each player's name in the text box
+        y_offset = self.text_box_position[1] + self.text_padding
+        for player in player_names:
+            name_text = f"{player['name']} (ID: {player['id']})"
+            text_surface = self.font.render(name_text, True, (0, 0, 0))
+            window.blit(
+                text_surface, (self.text_box_position[0] + self.text_padding, y_offset))
+            # Increment y-position for each player
+            y_offset += text_surface.get_height() + 10
+
+        # Draw buttons
         self.draw_buttons(window)
-
-    def draw_player_names(self, window, player_names):
-        x, y = self.text_box_position[0] + \
-            self.text_padding, self.text_box_position[1] + self.text_padding
-
-        for name in player_names:
-            name_surface = self.font.render(name, True, (0, 0, 0))
-            window.blit(name_surface, (x, y))
-            y += name_surface.get_height() + 5
 
     def draw_buttons(self, window):
         for button in self.buttons:

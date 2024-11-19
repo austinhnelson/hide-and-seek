@@ -4,11 +4,10 @@ import pygame
 
 
 class LobbyState(StateBase):
-    def __init__(self, game_state, client):
+    def __init__(self, game_state):
         self.menu = Lobby()
-        self.client = client
         self.game_state = game_state
-        self.ready = False
+        self.client = self.game_state.client
 
     def handle_input(self, event):
         if event.type == pygame.KEYDOWN:
@@ -17,4 +16,4 @@ class LobbyState(StateBase):
                 self.game_state.set_state(MenuState(self.game_state))
 
     def render(self, window):
-        self.menu.draw(window, [])
+        self.menu.draw(window, self.client.player_data["players"])
