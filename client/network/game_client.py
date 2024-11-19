@@ -27,8 +27,6 @@ class GameClient:
                 msg = self.server.recv(1024).decode('utf-8')
                 if msg:
                     self.player_data = json.loads(msg)
-
-                    print(self.player_data)
                 else:
                     print("Server closed connection.")
                     break
