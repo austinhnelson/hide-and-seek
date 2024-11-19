@@ -26,6 +26,7 @@ class GameState:
         if isinstance(self.state, LobbyState) and self.client:
             self.client.close()
             self.client = None
+
         self.state = new_state
 
     def initializeClient(self):

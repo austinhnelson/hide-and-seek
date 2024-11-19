@@ -19,7 +19,6 @@ class GameClient:
             "players": []
         }
 
-        # Start a thread to listen for data from the server
         threading.Thread(target=self.receive_data).start()
 
     def receive_data(self):

@@ -28,7 +28,7 @@ class GameServer:
     def run(self):
         while True:
             client_socket, addr = self.server.accept()
-            print(f"New connection from {addr}")
+            # print(f"New connection from {addr}")
             self.clients.append(client_socket)
 
             player_id = self.player_data["player_count"] + 1
@@ -49,10 +49,10 @@ class GameServer:
                 if not msg:
                     break
             except Exception as ex:
-                print(f"Error in client communication: {ex}")
+                # print(f"Error in client communication: {ex}")
                 break
             finally:
-                print(f"Client {player_id} disconnected")
+                # print(f"Client {player_id} disconnected")
                 self.clients.remove(client_socket)
                 self.player_data["players"] = [
                     player for player in self.player_data["players"] if player["id"] != player_id
