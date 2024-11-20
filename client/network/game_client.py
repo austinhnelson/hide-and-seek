@@ -14,6 +14,9 @@ class GameClient:
         self.port = int(os.getenv("SERVER_PORT"))
         self.server.connect((self.host, self.port))
 
+        player_info = json.loads(self.server.recv(1024).decode('utf-8'))
+        self.client_id = player_info["player_id"]
+
         self.player_data = {
             "player_count": 0,
             "players": []

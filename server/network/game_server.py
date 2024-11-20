@@ -32,6 +32,10 @@ class GameServer:
             self.clients.append(client_socket)
 
             player_id = self.player_data["player_count"] + 1
+
+            player_info = {"player_id": player_id}
+            client_socket.send(json.dumps(player_info).encode('utf-8'))
+
             self.player_data["player_count"] += 1
             self.player_data["players"].append(
                 {

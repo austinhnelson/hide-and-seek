@@ -16,4 +16,5 @@ class LobbyState(StateBase):
                 self.game_state.set_state(MenuState(self.game_state))
 
     def render(self, window):
-        self.menu.draw(window, self.client.player_data["players"])
+        self.menu.draw(
+            window, self.client.player_data["players"], self.client.client_id)
