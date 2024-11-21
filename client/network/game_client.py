@@ -14,6 +14,11 @@ class GameClient:
         self.port = int(os.getenv("SERVER_PORT"))
         self.server.connect((self.host, self.port))
 
+        self.ready = False
+
+        player_info = json.loads(self.server.recv(1024).decode('utf-8'))
+        self.client_id = player_info["player_id"]
+
         self.player_data = {
             "player_count": 0,
             "players": []
@@ -34,6 +39,20 @@ class GameClient:
             print(f"Error receiving data: {ex}")
         finally:
             self.close()
+
+    def toggle_ready(self):
+        self.ready = not self.ready
+
+        message = {
+            "type": "toggle_ready",
+            "player_id": self.client_id,
+            "ready": self.ready
+        }
+
+        try:
+            self.server.send(json.dumps(message).encode('utf-8'))
+        except Exception as ex:
+            print(f"Failed to send message to server: {ex}")
 
     def close(self):
         self.server.close()

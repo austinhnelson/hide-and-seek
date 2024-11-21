@@ -14,6 +14,9 @@ class LobbyState(StateBase):
             if event.key == pygame.K_RETURN:
                 from .menu import MenuState
                 self.game_state.set_state(MenuState(self.game_state))
+            if event.key == pygame.K_SPACE:
+                self.client.toggle_ready()
 
     def render(self, window):
-        self.menu.draw(window, self.client.player_data["players"])
+        self.menu.draw(
+            window, self.client.player_data["players"], self.client.client_id)

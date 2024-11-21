@@ -7,7 +7,7 @@ class Lobby:
         pygame.font.init()
 
         self.font = pygame.font.Font(
-            "client/assets/fonts/PlayMeGames-Demo.otf", 20)
+            "client/assets/fonts/KodeMono-VariableFont_wght.ttf", 20)
 
         self.button_font = pygame.font.Font(
             "client/assets/fonts/PlayMeGames-Demo.otf", 30)
@@ -25,7 +25,7 @@ class Lobby:
                 564, 649), "selected": True},
         ]
 
-    def draw(self, window, player_names):
+    def draw(self, window, player_names, current_player_id):
         image_rect = pygame.Rect(550, 50, DISPLAY["WIDTH"], DISPLAY["HEIGHT"])
         window.blit(self.image, (0, 0), image_rect)
 
@@ -41,11 +41,26 @@ class Lobby:
         y_offset = self.text_box_position[1] + self.text_padding
         for player in player_names:
             name_text = f"{player['name']} (ID: {player['id']})"
-            text_surface = self.font.render(name_text, True, (0, 0, 0))
-            window.blit(
-                text_surface, (self.text_box_position[0] + self.text_padding, y_offset))
+            is_current_player = player['id'] == current_player_id
+            text_color = (159, 173, 16) if is_current_player else (0, 0, 0)
 
-            y_offset += text_surface.get_height() + 10
+            name_surface = self.font.render(name_text, True, text_color)
+            window.blit(
+                name_surface, (self.text_box_position[0] +
+                               self.text_padding, y_offset)
+            )
+
+            ready_status = "Ready" if player.get(
+                'ready', False) else "Not Ready"
+            ready_color = (0, 255, 0) if player.get(
+                'ready', False) else (255, 0, 0)
+            ready_surface = self.font.render(ready_status, True, ready_color)
+            window.blit(
+                ready_surface, (self.text_box_position[0] +
+                                self.text_box_width - 150, y_offset)
+            )
+
+            y_offset += name_surface.get_height() + 10
 
         self.draw_buttons(window)
 

@@ -2,7 +2,6 @@ import pygame
 from config import DISPLAY
 from .game_state import GameState
 
-
 class Game:
     def __init__(self):
         pygame.init()
