@@ -17,6 +17,7 @@ class GameServer:
         self.server.listen(int(os.getenv("ALLOWED_CONNECTIONS")))
         # print(f"Server successfully started on {self.port}")
 
+        self.running_id_count = 0
         self.clients = []
         self.player_data = {
             "player_count": 0,
@@ -28,10 +29,11 @@ class GameServer:
     def run(self):
         while True:
             client_socket, addr = self.server.accept()
-            # print(f"New connection from {addr}")
+            print(f"New connection from {addr}")
             self.clients.append(client_socket)
 
-            player_id = self.player_data["player_count"] + 1
+            self.running_id_count += 1
+            player_id = self.running_id_count
 
             player_info = {"player_id": player_id}
             client_socket.send(json.dumps(player_info).encode('utf-8'))
@@ -40,30 +42,42 @@ class GameServer:
             self.player_data["players"].append(
                 {
                     "id": player_id,
-                    "name": f"Player {self.player_data['player_count']}"
+                    "name": f"Player {player_id}",
+                    "ready": False
                 })
 
             threading.Thread(target=self.__handle_client,
                              args=(client_socket, player_id)).start()
 
     def __handle_client(self, client_socket, player_id):
-        while True:
-            try:
+        try:
+            while True:
                 msg = client_socket.recv(1024).decode('utf-8')
                 if not msg:
                     break
-            except Exception as ex:
-                # print(f"Error in client communication: {ex}")
-                break
-            finally:
-                # print(f"Client {player_id} disconnected")
-                self.clients.remove(client_socket)
-                self.player_data["players"] = [
-                    player for player in self.player_data["players"] if player["id"] != player_id
-                ]
 
-                self.player_data["player_count"] -= 1
-                client_socket.close()
+                message = json.loads(msg)
+
+                if message["type"] == "toggle_ready":
+                    for player in self.player_data["players"]:
+                        if player["id"] == player_id:
+                            player["ready"] = message["ready"]
+                            break
+
+        except Exception as ex:
+            print(f"Error in client communication: {ex}")
+        finally:
+            print(f"Client {player_id} disconnected")
+            try:
+                self.clients.remove(client_socket)
+            except ValueError:
+                pass
+            self.player_data["players"] = [
+                player for player in self.player_data["players"] if player["id"] != player_id
+            ]
+
+            self.player_data["player_count"] -= 1
+            client_socket.close()
 
     def __broadcast_loop(self):
         while True:

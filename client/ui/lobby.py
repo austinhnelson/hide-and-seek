@@ -41,15 +41,26 @@ class Lobby:
         y_offset = self.text_box_position[1] + self.text_padding
         for player in player_names:
             name_text = f"{player['name']} (ID: {player['id']})"
-
             is_current_player = player['id'] == current_player_id
             text_color = (159, 173, 16) if is_current_player else (0, 0, 0)
 
-            text_surface = self.font.render(name_text, True, text_color)
+            name_surface = self.font.render(name_text, True, text_color)
             window.blit(
-                text_surface, (self.text_box_position[0] + self.text_padding, y_offset))
+                name_surface, (self.text_box_position[0] +
+                               self.text_padding, y_offset)
+            )
 
-            y_offset += text_surface.get_height() + 10
+            ready_status = "Ready" if player.get(
+                'ready', False) else "Not Ready"
+            ready_color = (0, 255, 0) if player.get(
+                'ready', False) else (255, 0, 0)
+            ready_surface = self.font.render(ready_status, True, ready_color)
+            window.blit(
+                ready_surface, (self.text_box_position[0] +
+                                self.text_box_width - 150, y_offset)
+            )
+
+            y_offset += name_surface.get_height() + 10
 
         self.draw_buttons(window)
 
