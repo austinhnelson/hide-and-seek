@@ -1,4 +1,6 @@
 import json
+import signal
+import sys
 import threading
 import socket
 import time
@@ -15,6 +17,7 @@ class GameServer:
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.bind((self.host, self.port))
         self.server.listen(int(os.getenv("ALLOWED_CONNECTIONS")))
+        self.running = True
         # print(f"Server successfully started on {self.port}")
 
         self.running_id_count = 0
@@ -26,10 +29,12 @@ class GameServer:
 
         threading.Thread(target=self.__broadcast_loop, daemon=True).start()
 
+        signal.signal(signal.SIGINT, self.__handle_shutdown)
+
     def run(self):
-        while True:
+        while self.running:
             client_socket, addr = self.server.accept()
-            print(f"New connection from {addr}")
+            # print(f"New connection from {addr}")
             self.clients.append(client_socket)
 
             self.running_id_count += 1
@@ -47,7 +52,7 @@ class GameServer:
                 })
 
             threading.Thread(target=self.__handle_client,
-                             args=(client_socket, player_id)).start()
+                             args=(client_socket, player_id),  daemon=True).start()
 
     def __handle_client(self, client_socket, player_id):
         try:
@@ -65,9 +70,10 @@ class GameServer:
                             break
 
         except Exception as ex:
-            print(f"Error in client communication: {ex}")
+            # print(f"Error in client communication: {ex}")
+            pass
         finally:
-            print(f"Client {player_id} disconnected")
+            # print(f"Client {player_id} disconnected")
             try:
                 self.clients.remove(client_socket)
             except ValueError:
@@ -80,7 +86,7 @@ class GameServer:
             client_socket.close()
 
     def __broadcast_loop(self):
-        while True:
+        while self.running:
             self.__broadcast(self.player_data)
             time.sleep(0.1)
 
@@ -89,4 +95,14 @@ class GameServer:
             try:
                 client.send(json.dumps(data).encode('utf-8'))
             except Exception as ex:
-                print(f"Error sending data to client: {ex}")
+                # print(f"Error sending data to client: {ex}")
+                pass
+
+    def __handle_shutdown(self, signum, frame):
+        self.running = False
+
+        for client in self.clients:
+            client.close()
+
+        self.server.close()
+        sys.exit(0)
