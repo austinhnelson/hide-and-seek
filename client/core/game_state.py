@@ -31,7 +31,12 @@ class GameState:
 
     def initializeClient(self):
         if not self.client:
-            self.client = GameClient()
+            try:
+                self.client = GameClient()
+                return True
+            except Exception as ex:
+                print(f"Error connecting to server, is it running? ")
+                return False
 
     def __handle_events(self):
         for event in pygame.event.get():
