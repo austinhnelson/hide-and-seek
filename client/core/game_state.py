@@ -15,6 +15,7 @@ class GameState:
     def run(self, window):
         self.__handle_events()
         self.__render(window)
+        self.__run()
 
     async def shutdown(self):
         if self.client:
@@ -49,3 +50,6 @@ class GameState:
         window.fill((0, 0, 0))
         self.state.render(window)
         pygame.display.flip()
+
+    def __run(self):
+        self.state.run()

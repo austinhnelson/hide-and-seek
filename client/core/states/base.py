@@ -9,3 +9,6 @@ class StateBase(ABC):
     @abstractmethod
     def render(self, window):
         pass
+
+    def run(self):
+        pass

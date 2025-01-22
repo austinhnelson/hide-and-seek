@@ -20,3 +20,11 @@ class LobbyState(StateBase):
     def render(self, window):
         self.menu.draw(
             window, self.client.player_data["players"], self.client.client_id)
+
+    def run(self):
+        # Determines when the game can actually be started.
+        is_all_ready = all(player["ready"]
+                           for player in self.client.player_data["players"])
+        if is_all_ready and self.client.player_data["player_count"] > 1:
+            from .playing import PlayingState
+            self.game_state.set_state(PlayingState(self.game_state))
