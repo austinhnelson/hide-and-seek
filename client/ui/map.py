@@ -21,7 +21,7 @@ class Map:
         self.tile_color = (118, 169, 227)
         self.background_color = (0, 0, 0)
 
-    def draw(self, window):
+    def draw(self, window, players, x=None, y=None):
         for row in range(self.height):
             for column in range(self.width):
                 tile = row * self.width + column
@@ -37,3 +37,12 @@ class Map:
                                  (column * self.tile_width, row *
                                   self.tile_height, self.tile_width, self.tile_height),
                                  1)
+
+        for player in players:
+            pos = player["position"]
+            pygame.draw.circle(
+                window,
+                (255, 0, 0),
+                (int(pos["x"]), int(pos["y"])),
+                self.tile_width // 4
+            )

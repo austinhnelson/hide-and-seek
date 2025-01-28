@@ -54,5 +54,19 @@ class GameClient:
         except Exception as ex:
             print(f"Failed to send message to server: {ex}")
 
+    def update_position(self, x, y):
+        message = {
+            "type": "update_position",
+            "position": {
+                "x": x,
+                "y": y,
+            }
+        }
+
+        try:
+            self.server.send(json.dumps(message).encode('utf-8'))
+        except Exception as ex:
+            print(f"Failed to send message to server: {ex}")
+
     def close(self):
         self.server.close()

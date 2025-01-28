@@ -4,6 +4,7 @@ import pygame
 from .states import MenuState
 from network import GameClient
 from .states import LobbyState
+from .states import PlayingState
 
 
 class GameState:
@@ -24,7 +25,7 @@ class GameState:
         sys.exit(0)
 
     def set_state(self, new_state):
-        if isinstance(self.state, LobbyState) and self.client:
+        if isinstance(self.state, LobbyState) and not isinstance(new_state, PlayingState):
             self.client.close()
             self.client = None
 

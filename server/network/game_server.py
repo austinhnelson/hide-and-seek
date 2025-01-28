@@ -48,7 +48,8 @@ class GameServer:
                 {
                     "id": player_id,
                     "name": f"Player {player_id}",
-                    "ready": False
+                    "ready": False,
+                    "position": {"x": 0, "y": 0}
                 })
 
             threading.Thread(target=self.__handle_client,
@@ -68,6 +69,11 @@ class GameServer:
                         if player["id"] == player_id:
                             player["ready"] = message["ready"]
                             break
+                elif message["type"] == "update_position":
+                    for player in self.player_data["players"]:
+                        if player["id"] == player_id:
+                            player["position"]["x"] = message["position"]["x"]
+                            player["position"]["y"] = message["position"]["y"]
 
         except Exception as ex:
             # print(f"Error in client communication: {ex}")
